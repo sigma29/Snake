@@ -48,4 +48,43 @@
     return( this.row === otherCoord.row && this.col === otherCoord.col);
   };
 
+
+  var Board = SnakeGame.Board = function(size) {
+    this.size = size;
+    this.grid = this.createGrid(size);
+    this.snake = new Snake();
+    this.fillSnake();
+  }
+
+  Board.BLANK = "."
+  Board.SNAKE = "S"
+
+  Board.prototype.createGrid = function (size) {
+    var row, i, j;
+    var grid = [];
+
+    for (i = 0; i < size; i++) {
+      row = [];
+      for (j = 0; j < size; j++) {
+        row.push(Board.BLANK);
+      }
+      grid.push(row);
+    }
+
+    this.grid = grid;
+  };
+
+  Board.prototype.fillSnake = function() {
+    for (var i = 0; i < this.snake.sections.length; i++) {
+      this.grid(this.snake.sections[i]) = Board.SNAKE;
+    }
+  };
+
+  Board.prototype.render = function () {
+
+    this.grid.each( function(row) {
+      console.log(row.join(" "));
+    });
+  };
+
 })();
