@@ -5,10 +5,18 @@
     <meta charset="utf-8">
     <title>Snake!</title>
     <link rel="stylesheet" type="text/css" href="../css/snake.css">
-    <script src="../js/snake.js"></script>
     <script src="../js/jquery-2.1.1.js"></script>
+    <script src="../js/snake.js"></script>
+    <script src="../js/snake-view.js"></script>
+
   </head>
   <body>
-
+    <figure class="snake-game">
+    </figure>
+    <script>
+      $(function () {
+        new SnakeGame.View($(".snake-game"));
+      });
+    </script>
   </body>
 </html>

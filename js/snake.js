@@ -11,6 +11,7 @@
 
   Snake.prototype.move = function () {
     var head = new SnakeGame.Coord (this.segments[0]);
+    console.log('head',head);
     var newHead;
     switch (this.dir) {
       case "N":
@@ -26,8 +27,11 @@
       newHead = head.plus(0, -1);
       break;
     }
+    console.log('newHead',newHead);
     this.segments.unshift(newHead.pos);
+    console.log('segments after new head',this.segments)
     this.segments.pop();
+    console.log('segments after update tail',this.segments)
   };
 
   Snake.prototype.isOpposite = function (dir) {
@@ -42,18 +46,21 @@
 
   Snake.prototype.turn = function (dir) {
     if (this.isOpposite(dir)) { return; }
-    
+
     this.dir = dir;
   };
 
   var Coord = SnakeGame.Coord = function(arr) {
     this.row = arr[0];
     this.col = arr[1];
+    this.pos = [arr[0],arr[1]]
   }
 
   Coord.prototype.plus = function(drow, dcol) {
     this.row += drow;
     this.col += dcol;
+    this.pos = [this.row,this.col];
+    return this;
   }
 
   Coord.prototype.equals = function (otherCoord) {
@@ -63,21 +70,21 @@
 
   var Board = SnakeGame.Board = function(size) {
     this.size = size;
-    this.grid = this.createGrid(this.size);
     this.snake = new Snake();
-    this.fillSnake();
+    this.resetGrid();
+    this.render();
   }
 
   Board.BLANK = "."
   Board.SNAKE = "S"
 
-  Board.prototype.createGrid = function(size) {
+  Board.prototype.createGrid = function() {
     var row, i, j;
     var grid = [];
 
-    for (i = 0; i < size; i++) {
+    for (i = 0; i < this.size; i++) {
       row = [];
-      for (j = 0; j < size; j++) {
+      for (j = 0; j < this.size; j++) {
         row.push(Board.BLANK);
       }
       grid.push(row);
@@ -90,14 +97,15 @@
     this.grid[square[0]][square[1]] = value;
   };
 
-  Board.prototype.fillSnake = function() {
+  Board.prototype.resetGrid = function() {
+    this.grid = this.createGrid();
+    console.log(this.grid);
     for (var i = 0; i < this.snake.segments.length; i++) {
       this.setSquare(this.snake.segments[i],Board.SNAKE);
     }
   };
 
   Board.prototype.render = function () {
-
     this.grid.forEach( function(row) {
       console.log(row.join(" "));
     });

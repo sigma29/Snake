@@ -3,9 +3,10 @@
 
   var View = SnakeGame.View = function(el) {
     this.$el = $(el);
-    this.board = new SnakeGame.Board();
-
+    this.board = new SnakeGame.Board(10);
+    this.snake = this.board.snake;
     this.$el.on("keydown", this.handleKeyEvent.bind(this));
+    setInterval(this.step.bind(this), 500);
   };
 
   View.prototype.handleKeyEvent = function (event) {
@@ -14,18 +15,24 @@
 
       switch(key) {
         case 37:  //left-arrow
-          this.board.snake.turn("W")
+          this.snake.turn("W")
           break;
         case 38:  //up-arrow
-          this.board.snake.turn("N")
+          this.snake.turn("N")
           break;
         case 39:  //right-arrow
-          this.board.snake.turn("E")
+          this.snake.turn("E")
           break;
         case 40:  //down-arrow
-          this.board.snake.turn("S")
+          this.snake.turn("S")
           break;
       }
+  };
+
+  View.prototype.step = function () {
+    this.snake.move();
+    this.board.resetGrid();
+    this.board.render();
   };
 
 })();
