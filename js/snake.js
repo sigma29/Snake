@@ -30,7 +30,19 @@
     this.segments.pop();
   };
 
+  Snake.prototype.isOpposite = function (dir) {
+    var dirs = [dir, this.dir].sort().join("");
+
+    if (dirs === "NS" || dirs === "EW") {
+      return true;
+    }
+
+    return false;
+  };
+
   Snake.prototype.turn = function (dir) {
+    if (this.isOpposite(dir)) { return; }
+    
     this.dir = dir;
   };
 
@@ -51,7 +63,7 @@
 
   var Board = SnakeGame.Board = function(size) {
     this.size = size;
-    this.grid = this.createGrid(size);
+    this.grid = this.createGrid(this.size);
     this.snake = new Snake();
     this.fillSnake();
   }
@@ -59,7 +71,7 @@
   Board.BLANK = "."
   Board.SNAKE = "S"
 
-  Board.prototype.createGrid = function (size) {
+  Board.prototype.createGrid = function(size) {
     var row, i, j;
     var grid = [];
 
@@ -71,18 +83,22 @@
       grid.push(row);
     }
 
-    this.grid = grid;
+    return grid;
+  };
+
+  Board.prototype.setSquare = function(square,value) {
+    this.grid[square[0]][square[1]] = value;
   };
 
   Board.prototype.fillSnake = function() {
-    for (var i = 0; i < this.snake.sections.length; i++) {
-      this.grid(this.snake.sections[i]) = Board.SNAKE;
+    for (var i = 0; i < this.snake.segments.length; i++) {
+      this.setSquare(this.snake.segments[i],Board.SNAKE);
     }
   };
 
   Board.prototype.render = function () {
 
-    this.grid.each( function(row) {
+    this.grid.forEach( function(row) {
       console.log(row.join(" "));
     });
   };
